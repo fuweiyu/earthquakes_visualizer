@@ -34,27 +34,62 @@ function initializeTimeline(firstDate, lastDate, features) {
     const dateDisplay = document.getElementById("date_title_bottom");
     let intervalId = null;
 
-    const totalDays = Math.floor((lastDate - firstDate) / (1000 * 60 * 60 * 24));
+    const totalDays = Math.floor((lastDate - firstDate) / (1000 * 60 * 60 * 24)) + 1; // Include last day
     timelineInput.min = 0;
     timelineInput.max = totalDays;
     timelineInput.value = 0;
 
     function updateMapByDate(index) {
+        // Get the selected mode from the radio buttons
+        const mode = document.querySelector('input[name="mode"]:checked').value;
+
+        // If index is 0, clear the map and display "Date: --"
         if (index === 0) {
-            dateDisplay.textContent = "Time 0";
-            if (earthquakeLayer) myMap.removeLayer(earthquakeLayer);
-            return;
+            dateDisplay.textContent = "Date: --";
+
+            // Clear all earthquake layers explicitly
+            myMap.eachLayer(layer => {
+                if (layer instanceof L.GeoJSON) {
+                    myMap.removeLayer(layer);
+                }
+            });
+
+            earthquakeLayer = null; // Clear reference to the layer
+            return; // Exit the function to prevent further processing
         }
 
+        // Calculate the current date based on the index
         const currentDate = new Date(firstDate);
-        currentDate.setDate(firstDate.getDate() + index - 1);
+        currentDate.setDate(firstDate.getDate() + (index - 1)); // Align index directly to the date
         dateDisplay.textContent = `Date: ${currentDate.toISOString().split("T")[0]}`;
 
-        const filteredFeatures = features.filter(feature => {
-            const earthquakeDate = new Date(feature.properties.date);
-            return earthquakeDate <= currentDate;
-        });
+        // Filter features based on the selected mode
+        let filteredFeatures;
+        if (mode === "cumulative") {
+            // Include earthquakes up to and including the current date
+            filteredFeatures = features.filter(feature => {
+                const earthquakeDate = new Date(feature.properties.date);
+                return earthquakeDate <= currentDate;
+            });
+        } else if (mode === "daily") {
+            // Include only earthquakes on the exact current date
+            filteredFeatures = features.filter(feature => {
+                const earthquakeDate = new Date(feature.properties.date);
+                return (
+                    earthquakeDate.getFullYear() === currentDate.getFullYear() &&
+                    earthquakeDate.getMonth() === currentDate.getMonth() &&
+                    earthquakeDate.getDate() === currentDate.getDate()
+                );
+            });
+        }
 
+        // Debugging Logs
+        console.log("Mode:", mode);
+        console.log("Timeline Index:", index);
+        console.log("Current Date:", currentDate);
+        console.log("Filtered Earthquakes Count:", filteredFeatures.length);
+
+        // Update the earthquake layer with the filtered features
         updateEarthquakeLayer(filteredFeatures);
     }
 
@@ -63,15 +98,14 @@ function initializeTimeline(firstDate, lastDate, features) {
         let currentIndex = parseInt(timelineInput.value, 10);
 
         intervalId = setInterval(() => {
-            currentIndex = forward ? currentIndex + 1 : currentIndex - 1;
-
-            if (currentIndex < 0 || currentIndex > totalDays) {
+            if ((forward && currentIndex >= totalDays) || (!forward && currentIndex <= 0)) {
                 clearInterval(intervalId);
             } else {
+                currentIndex = forward ? currentIndex + 1 : currentIndex - 1;
                 timelineInput.value = currentIndex;
                 updateMapByDate(currentIndex);
             }
-        }, 1000);
+        }, 1000); // Adjust speed as needed
     }
 
     playBackButton.addEventListener("click", () => playTimeline(false));
@@ -99,8 +133,18 @@ function initializeTimeline(firstDate, lastDate, features) {
 }
 
 function updateEarthquakeLayer(filteredFeatures) {
-    if (earthquakeLayer) myMap.removeLayer(earthquakeLayer);
+    // Remove the existing earthquake layer, if any
+    if (earthquakeLayer) {
+        myMap.removeLayer(earthquakeLayer);
+        earthquakeLayer = null; // Clear reference to the removed layer
+    }
 
+    // If no features are passed, do not add a new layer
+    if (!filteredFeatures || filteredFeatures.length === 0) {
+        return;
+    }
+
+    // Create a new earthquake layer with the filtered features
     earthquakeLayer = L.geoJSON(filteredFeatures, {
         pointToLayer: createMarker,
         onEachFeature: function (feature, layer) {
@@ -113,6 +157,7 @@ function updateEarthquakeLayer(filteredFeatures) {
 
     earthquakeLayer.addTo(myMap);
 }
+
 
 function createMarker(feature, latlng) {
     return L.circleMarker(latlng, {
