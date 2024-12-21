@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet CSV Timelapse</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 80vh;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #controls {
+            margin: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #timeline {
+            width: 80%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controls">
+        <input type="file" id="fileInput" accept=".csv">
+        <input type="range" id="timeline" min="0" max="0" step="1" value="0">
+        <span id="dateDisplay">Date: --</span>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        const markers = []; // Store marker references
+        const timelineInput = document.getElementById('timeline');
+        const dateDisplay = document.getElementById('dateDisplay');
+        let parsedData = []; // Parsed CSV data
+
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                Papa.parse(file, {
+                    header: true,
+                    dynamicTyping: true,
+                    complete: (results) => {
+                        parsedData = results.data;
+                        processData(parsedData);
+                    },
+                });
+            }
+        });
+
+        function processData(data) {
+            // Ensure data is sorted by time
+            data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+            // Set the timeline range
+            timelineInput.max = data.length - 1;
+            updateTimelapse(0); // Initialize with first data point
+
+            // Add event listener for timeline input
+            timelineInput.addEventListener('input', (e) => {
+                updateTimelapse(+e.target.value);
+            });
+        }
+
+        function updateTimelapse(index) {
+            // Clear previous markers
+            markers.forEach((marker) => map.removeLayer(marker));
+            markers.length = 0;
+
+            const row = parsedData[index];
+            if (row && row.latitude && row.longitude) {
+                const marker = L.circleMarker([row.latitude, row.longitude], {
+                    radius: 8,
+                    color: 'red',
+                    fillOpacity: 0.5,
+                }).addTo(map);
+
+                marker.bindPopup(`Date: ${row.timestamp}<br>Value: ${row.value || 'N/A'}`).openPopup();
+                markers.push(marker);
+
+                map.setView([row.latitude, row.longitude], 4);
+                dateDisplay.textContent = `Date: ${row.timestamp}`;
+            }
+        }
+
+        function playTimelapse() {
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index >= parsedData.length) {
+                    clearInterval(interval);
+                } else {
+                    timelineInput.value = index;
+                    updateTimelapse(index);
+                    index++;
+                }
+            }, 1000); // Change data every second
+        }
+
+        // Add a Play button dynamically
+        const playButton = document.createElement('button');
+        playButton.textContent = 'Play Timelapse';
+        playButton.addEventListener('click', playTimelapse);
+        document.getElementById('controls').appendChild(playButton);
+    </script>
+</body>
+
+</html>
