@@ -21,11 +21,16 @@
     <div id="map"></div>
 
     <!-- Timeline controls -->
-    <div id="date_title_bottom" class="date_title_bottom"></div>
     <div id="timeline-controls" class="info legend leaflet-control">
-        <div id="dateDisplay">Date: --</div>
-        <input type="range" id="timeline" min="0" max="0" step="1" value="0">
-        <button id="playButton">Play</button>
+        <div id="date_title_bottom">Time 0</div>
+        <div class="player-controls">
+            <button id="playBackButton" title="Play Backward">◁◁</button>
+            <button id="stepBackButton" title="Step Backward">◁</button>
+            <button id="pauseButton" title="Pause">||</button>
+            <button id="stepForwardButton" title="Step Forward">▷</button>
+            <button id="playForwardButton" title="Play Forward">▷▷</button>
+        </div>
+        <input type="range" id="timeline" min="0" max="0" value="0">
     </div>
 
     <!-- Leaflet JS -->
