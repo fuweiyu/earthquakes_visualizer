@@ -1,4 +1,5 @@
 let queryUrl = "static/data/Chunk.json";
+//let queryUrl = "https://drive.google.com/file/d/1c8B1taTQzf7OuITS8rCy-V40pVnoJkhT/view?usp=sharing"
 let plateUrl = "static/data/PB2002_boundaries.json";
 
 let myMap;

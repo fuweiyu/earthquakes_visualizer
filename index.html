@@ -20,6 +20,19 @@
     <!-- The div that holds our map -->
     <div id="map"></div>
 
+    <!-- Hamburger Menu Trigger -->
+    <div id="hamburger-icon" class="hamburger-icon">
+        <!-- Three bars -->
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!-- The actual dropdown menu (hidden by default) -->
+    <div id="hamburger-menu" class="hamburger-menu hidden">
+        <!-- We’ll fill this menu with items via JavaScript (or directly in HTML). -->
+    </div>
+
     <!-- Timeline controls -->
     <div id="timeline-controls" class="info legend leaflet-control">
         <div id="date_title_bottom">Time 0</div>
@@ -41,13 +54,17 @@
             <input type="radio" name="mode" value="daily"> Daily Version
         </label>
     </div>
-
+    
+    <!-- DO NOT PLACE OTHER SCRIPTS BEFOR THIS. The menu should go before all other scripts, so it can access any needed globals -->
+    <script src="static/js/menu.js"></script>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <!-- Our JavaScript -->
     <script type="text/javascript" src="static/js/logic.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
 </body>
 
 

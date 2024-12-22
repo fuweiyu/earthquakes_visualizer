@@ -54,3 +54,48 @@ html {
         padding: 5px 10px;
         cursor: pointer;
     }
+
+/* --- HAMBURGER ICON --- */
+.hamburger-icon {
+    width: 30px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+    .hamburger-icon div {
+        width: 100%;
+        height: 4px;
+        background-color: #333;
+        margin: 4px 0;
+    }
+
+/* --- MENU DROPDOWN --- */
+.hamburger-menu {
+    position: absolute;
+    top: 60px; /* adjust to position below the icon */
+    right: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-width: 160px;
+    z-index: 1000;
+}
+
+    .hamburger-menu.hidden {
+        display: none;
+    }
+
+    .hamburger-menu ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .hamburger-menu li {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+        .hamburger-menu li:hover {
+            background-color: #f0f0f0;
+        }
