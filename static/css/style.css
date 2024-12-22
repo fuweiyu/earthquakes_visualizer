@@ -71,7 +71,7 @@ html {
     right: 10px; /* Align it to the right side */
     width: 30px;
     cursor: pointer;
-    z-index: 1000; /* Ensure it overlaps the map */
+    z-index: 9999; /* Ensure it overlaps the map */
     background-color: rgba(255, 255, 255, 0.9); /* Add a background to distinguish it from the map */
     border: 1px solid #ccc; /* Optional: Add a border for better visibility */
     border-radius: 5px; /* Rounded corners */
@@ -128,7 +128,7 @@ html {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    z-index: 1000; /* Ensure it's above other elements */
+    z-index: 998; /* Ensure it's above other elements */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     width: 150px; /* Adjusted width to fit the full text */
     font-size: 12px; /* Ensure text is readable */

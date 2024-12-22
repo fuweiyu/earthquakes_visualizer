@@ -10,11 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Build the menu
     const menuList = document.createElement("ul");
     const menuItems = [
-        //{ id: "printChart", label: "Print Chart" },
         { id: "downloadCSV", label: "Download CSV" },
         { id: "downloadXLS", label: "Download XLS" }
     ];
-
 
     menuItems.forEach(item => {
         const li = document.createElement("li");
@@ -47,13 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const dateToInput = document.getElementById("dateTo");
 
     // MENU EVENT HANDLERS
-    //const printChartBtn = document.getElementById("printChart");
-
-    printChartBtn.addEventListener("click", () => {
-        hamburgerMenu.classList.add("hidden"); // Hide the menu
-        window.print(); // Trigger print dialog
-    });
-
     downloadCSVBtn.addEventListener("click", () => showExportOptions("csv"));
     downloadXLSBtn.addEventListener("click", () => showExportOptions("xls"));
 
