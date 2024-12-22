@@ -58,36 +58,54 @@ function initializeTimeline(firstDate, lastDate, features) {
             return; // Exit the function to prevent further processing
         }
 
-        // Calculate the current date based on the index
-        const currentDate = new Date(firstDate);
-        currentDate.setDate(firstDate.getDate() + (index - 1)); // Align index directly to the date
+        // Calculate the initial current date based on the index in GMT+0 (UTC)
+        let currentDate = new Date(firstDate);
+        currentDate.setDate(firstDate.getUTCDate() + (index - 1)); // Use UTC-based date
+        const currentDayUTC = currentDate.toISOString().split("T")[0]; // Current day in UTC
+        console.log("Current Day (UTC):", currentDayUTC);
+
+        // Adjust currentDate to the latest valid earthquake date in GMT+0 (UTC)
+        let index1 = 0;
+        while (index1 < features.length) {
+            const featureDate = new Date(features[index1].properties.date);
+            const featureDayUTC = featureDate.toISOString().split("T")[0]; // Feature day in UTC
+
+            // Stop if the feature date exceeds the current day (UTC-based comparison)
+            if (featureDayUTC !== currentDayUTC) {
+                break; // Exit the loop as we reached the next day
+            }
+
+            // Update currentDate to the latest timestamp for the current day
+            currentDate = featureDate;
+            index1++;
+        }
+
         dateDisplay.textContent = `Date: ${currentDate.toISOString().split("T")[0]}`;
+        console.log("Final Current Date (GMT+0):", currentDate);
 
         // Filter features based on the selected mode
         let filteredFeatures;
         if (mode === "cumulative") {
-            // Include earthquakes up to and including the current date
+            // Include earthquakes up to and including the current date (UTC-based)
             filteredFeatures = features.filter(feature => {
                 const earthquakeDate = new Date(feature.properties.date);
                 return earthquakeDate <= currentDate;
             });
         } else if (mode === "daily") {
-            // Include only earthquakes on the exact current date
+            // Include only earthquakes on the exact current date (UTC-based)
             filteredFeatures = features.filter(feature => {
                 const earthquakeDate = new Date(feature.properties.date);
                 return (
-                    earthquakeDate.getFullYear() === currentDate.getFullYear() &&
-                    earthquakeDate.getMonth() === currentDate.getMonth() &&
-                    earthquakeDate.getDate() === currentDate.getDate()
+                    earthquakeDate.getUTCFullYear() === currentDate.getUTCFullYear() &&
+                    earthquakeDate.getUTCMonth() === currentDate.getUTCMonth() &&
+                    earthquakeDate.getUTCDate() === currentDate.getUTCDate()
                 );
             });
         }
 
         // Debugging Logs
-        console.log("Mode:", mode);
-        console.log("Timeline Index:", index);
-        console.log("Current Date:", currentDate);
-        console.log("Filtered Earthquakes Count:", filteredFeatures.length);
+        console.log("Filtered Features Count:", filteredFeatures.length);
+        console.log("Filtered Features:", filteredFeatures);
 
         // Update the earthquake layer with the filtered features
         updateEarthquakeLayer(filteredFeatures);
