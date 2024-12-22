@@ -202,13 +202,48 @@ function createMap(earthquakes, plates) {
     let overlayMaps = { "Earthquakes": earthquakes, "Tectonic Plates": plates };
 
     myMap = L.map("map", {
-        center: [37.09, -95.71],
-        zoom: 5,
+        center: [0, 0],
+        zoom: 3,
         layers: [street, earthquakes, plates]
     });
 
-    L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(myMap);
+    let layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(myMap);
+
+    // Add a listener for when the "Earthquakes" checkbox is toggled
+    myMap.on('overlayadd', function (e) {
+        if (e.name === "Earthquakes") {
+            // Ensure the correct layer is shown based on the selected mode
+            const index = parseInt(document.getElementById("timeline").value, 10);
+            updateMapByDate(index);
+        }
+    });
+
+    myMap.on('overlayremove', function (e) {
+        if (e.name === "Earthquakes") {
+            // Remove the earthquake layer if it's toggled off
+            if (earthquakeLayer) {
+                myMap.removeLayer(earthquakeLayer);
+            }
+        }
+    });
+
+    // Add a legend for depth
+    let legend = L.control({ position: 'bottomright' });
+
+    legend.onAdd = function () {
+        let div = L.DomUtil.create('div', 'info legend'),
+            grades = [-10, 10, 30, 50, 70, 90];
+
+        // Loop through depth intervals and generate a label with a colored square
+        for (let i = 0; i < grades.length; i++) {
+            div.innerHTML += `<i style="background:${markerColor(grades[i] + 1)}"></i> ${grades[i]}${grades[i + 1] ? `&ndash;${grades[i + 1]}` : '+'}<br>`;
+        }
+        return div;
+    };
+
+    legend.addTo(myMap);
 }
+
 
 function markerSize(magnitude) {
     return magnitude * 5;
