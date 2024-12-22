@@ -116,6 +116,12 @@ function initializeTimeline(firstDate, lastDate, features) {
         clearInterval(intervalId);
         let currentIndex = parseInt(timelineInput.value, 10);
 
+        // Get the speed value from the selector
+        const speedSelector = document.getElementById('speed-selector');
+        const speed = parseInt(speedSelector.value, 10);
+        console.log("Selected speed:", speed);
+
+
         intervalId = setInterval(() => {
             if ((forward && currentIndex >= totalDays) || (!forward && currentIndex <= 0)) {
                 clearInterval(intervalId);
@@ -124,7 +130,7 @@ function initializeTimeline(firstDate, lastDate, features) {
                 timelineInput.value = currentIndex;
                 updateMapByDate(currentIndex);
             }
-        }, 1000); // Adjust speed as needed
+        }, speed); // Use the selected speed
     }
 
     playBackButton.addEventListener("click", () => playTimeline(false));
@@ -221,37 +227,51 @@ function createMap(earthquakes, plates) {
     let overlayMaps = { "Earthquakes": earthquakes, "Tectonic Plates": plates };
 
     myMap = L.map("map", {
-        center: [0, 0],
+        center: [23.3, 0],
         zoom: 3,
         layers: [street, earthquakes, plates]
     });
 
     let layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(myMap);
 
-    // Add a listener for when the "Earthquakes" checkbox is toggled
-    myMap.on('overlayadd', function (e) {
-        if (e.name === "Earthquakes") {
-            // Ensure the correct layer is shown based on the selected mode
+    // Append the toggle mode section to the layer control container
+    const layerControlContainer = document.querySelector('.leaflet-control-layers-list');
+
+    let toggleModeDiv = document.createElement('div');
+    toggleModeDiv.id = 'toggle-mode';
+    toggleModeDiv.style.marginTop = '5px'; // Slight spacing from the top
+    toggleModeDiv.innerHTML = `
+        <label>
+            <input type="radio" name="mode" value="cumulative" checked> Cumulative Version
+        </label>
+        <label>
+            <input type="radio" name="mode" value="daily"> Daily Version
+        </label>
+    `;
+    layerControlContainer.appendChild(toggleModeDiv);
+
+
+    // Add event listeners for mode changes
+    document.querySelectorAll('input[name="mode"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+            console.log("Selected mode:", selectedMode);
+
+            // Update map based on the selected mode
             const index = parseInt(document.getElementById("timeline").value, 10);
             updateMapByDate(index);
-        }
-    });
-
-    myMap.on('overlayremove', function (e) {
-        if (e.name === "Earthquakes") {
-            // Remove the earthquake layer if it's toggled off
-            if (earthquakeLayer) {
-                myMap.removeLayer(earthquakeLayer);
-            }
-        }
+        });
     });
 
     // Add a legend for depth
     let legend = L.control({ position: 'bottomright' });
 
     legend.onAdd = function () {
-        let div = L.DomUtil.create('div', 'info legend'),
-            grades = [-10, 10, 30, 50, 70, 90];
+        let div = L.DomUtil.create('div', 'info legend');
+        div.style.marginBottom = '120px'; // Raise the legend 50px from the bottom
+        div.style.marginRight = '10px';  // Adjust left margin if needed
+
+        let grades = [-10, 10, 30, 50, 70, 90];
 
         // Loop through depth intervals and generate a label with a colored square
         for (let i = 0; i < grades.length; i++) {
@@ -259,7 +279,6 @@ function createMap(earthquakes, plates) {
         }
         return div;
     };
-
     legend.addTo(myMap);
 }
 
