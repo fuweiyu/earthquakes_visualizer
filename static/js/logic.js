@@ -63,7 +63,7 @@ function initializeTimeline(firstDate, lastDate, features) {
         let currentDate = new Date(firstDate);
         currentDate.setDate(firstDate.getUTCDate() + (index - 1)); // Use UTC-based date
         const currentDayUTC = currentDate.toISOString().split("T")[0]; // Current day in UTC
-        console.log("Current Day (UTC):", currentDayUTC);
+        //console.log("Current Day (UTC):", currentDayUTC);
 
         // Adjust currentDate to the latest valid earthquake date in GMT+0 (UTC)
         let index1 = 0;
@@ -82,7 +82,7 @@ function initializeTimeline(firstDate, lastDate, features) {
         }
 
         dateDisplay.textContent = `Date: ${currentDate.toISOString().split("T")[0]}`;
-        console.log("Final Current Date (GMT+0):", currentDate);
+        //console.log("Final Current Date (GMT+0):", currentDate);
 
         // Filter features based on the selected mode
         let filteredFeatures;
@@ -105,8 +105,8 @@ function initializeTimeline(firstDate, lastDate, features) {
         }
 
         // Debugging Logs
-        console.log("Filtered Features Count:", filteredFeatures.length);
-        console.log("Filtered Features:", filteredFeatures);
+        //console.log("Filtered Features Count:", filteredFeatures.length);
+        //console.log("Filtered Features:", filteredFeatures);
 
         // Update the earthquake layer with the filtered features
         updateEarthquakeLayer(filteredFeatures);
@@ -115,6 +115,12 @@ function initializeTimeline(firstDate, lastDate, features) {
     function playTimeline(forward = true) {
         clearInterval(intervalId);
         let currentIndex = parseInt(timelineInput.value, 10);
+    
+        // Get the speed value from the selector
+        const speedSelector = document.getElementById('speed-selector');
+        const speed = parseInt(speedSelector.value, 10);
+        console.log("Selected speed:", speed);
+
 
         intervalId = setInterval(() => {
             if ((forward && currentIndex >= totalDays) || (!forward && currentIndex <= 0)) {
@@ -124,8 +130,9 @@ function initializeTimeline(firstDate, lastDate, features) {
                 timelineInput.value = currentIndex;
                 updateMapByDate(currentIndex);
             }
-        }, 0.005); // Adjust speed as needed
+        }, speed); // Use the selected speed
     }
+    
 
     playBackButton.addEventListener("click", () => playTimeline(false));
     playForwardButton.addEventListener("click", () => playTimeline(true));
@@ -221,7 +228,7 @@ function createMap(earthquakes, plates) {
     let overlayMaps = { "Earthquakes": earthquakes, "Tectonic Plates": plates };
 
     myMap = L.map("map", {
-        center: [0, 0],
+        center: [23.3, 0],
         zoom: 3,
         layers: [street, earthquakes, plates]
     });

@@ -46,15 +46,21 @@ html {
     width: 1870px;
 }
 
-    #timeline-controls input[type="range"] {
-        width: 100%;
-    }
+#timeline-controls input[type="range"] {
+    width: 100%;
+}
 
-    #timeline-controls button {
-        margin-top: 10px;
-        padding: 5px 10px;
-        cursor: pointer;
-    }
+#timeline-controls button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    cursor: pointer;  
+}
+
+#speed-container {
+  position: absolute;
+  top: 10px;
+  left: 20px; /* Adjust horizontal position */
+}
 
 /* --- HAMBURGER ICON --- */
 .hamburger-icon {
