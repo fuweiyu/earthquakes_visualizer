@@ -18,14 +18,24 @@
 
 <body>
     <!-- The div that holds our map -->
-    <div id="map"></div>
+    <div id="map" style="position: relative;">
+        <!--
+        <div id="toggle-mode" class="toggle-mode">
+            <label>
+                <input type="radio" name="mode" value="cumulative" checked> Cumulative Version
+            </label>
+            <label>
+                <input type="radio" name="mode" value="daily"> Daily Version
+            </label>
+        </div>-->
+        <!-- Hamburger Menu Trigger -->
+        <div id="hamburger-icon" class="hamburger-icon">
+            <!-- Three bars -->
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
 
-    <!-- Hamburger Menu Trigger -->
-    <div id="hamburger-icon" class="hamburger-icon">
-        <!-- Three bars -->
-        <div></div>
-        <div></div>
-        <div></div>
     </div>
 
     <!-- The actual dropdown menu (hidden by default) -->
@@ -35,6 +45,16 @@
 
     <!-- Timeline controls -->
     <div id="timeline-controls" class="info legend leaflet-control">
+        <div id="speed-container" style="display: flex; align-items: center;">
+            <label for="speed-selector">Playing speed:</label>
+            <select id="speed-selector">
+                <option value="1000">Slow</option>
+                <option value="100" selected>Normal</option>
+                <option value="0.05">Fast</option>
+                <option value="0.0005">Very Fast</option>
+            </select>
+        </div>
+
         <div id="date_title_bottom">Time 0</div>
         <div class="player-controls">
             <button id="playBackButton" title="Play Backward">◁◁</button>
@@ -46,17 +66,13 @@
         <input type="range" id="timeline" min="0" max="0" value="0">
     </div>
 
-    <div id="toggle-mode" style="margin-bottom: 10px; text-align: center;">
-        <label>
-            <input type="radio" name="mode" value="cumulative" checked> Cumulative Version
-        </label>
-        <label>
-            <input type="radio" name="mode" value="daily"> Daily Version
-        </label>
-    </div>
-    
+
+
     <!-- DO NOT PLACE OTHER SCRIPTS BEFOR THIS. The menu should go before all other scripts, so it can access any needed globals -->
     <script src="static/js/menu.js"></script>
+
+    <!-- html2canvas  -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
