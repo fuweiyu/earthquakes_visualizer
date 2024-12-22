@@ -34,6 +34,7 @@ html {
     position: absolute;
     bottom: 20px;
     left: 20px;
+    right: 20px;
     z-index: 1000;
     background: rgba(255, 255, 255, 0.8);
     padding: 10px;
@@ -42,7 +43,7 @@ html {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 200px;
+    width: 1870px;
 }
 
     #timeline-controls input[type="range"] {
@@ -99,3 +100,7 @@ html {
         .hamburger-menu li:hover {
             background-color: #f0f0f0;
         }
+
+
+/* --- INFO BOX --- */
+

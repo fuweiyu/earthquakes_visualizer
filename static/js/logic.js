@@ -124,7 +124,7 @@ function initializeTimeline(firstDate, lastDate, features) {
                 timelineInput.value = currentIndex;
                 updateMapByDate(currentIndex);
             }
-        }, 1000); // Adjust speed as needed
+        }, 0.005); // Adjust speed as needed
     }
 
     playBackButton.addEventListener("click", () => playTimeline(false));
@@ -250,16 +250,18 @@ function createMap(earthquakes, plates) {
     let legend = L.control({ position: 'bottomright' });
 
     legend.onAdd = function () {
-        let div = L.DomUtil.create('div', 'info legend'),
-            grades = [-10, 10, 30, 50, 70, 90];
-
+        let div = L.DomUtil.create('div', 'info legend');
+        div.style.marginBottom = '120px'; // Raise the legend 50px from the bottom
+        div.style.marginRight = '10px';  // Adjust left margin if needed
+    
+        let grades = [-10, 10, 30, 50, 70, 90];
+    
         // Loop through depth intervals and generate a label with a colored square
         for (let i = 0; i < grades.length; i++) {
             div.innerHTML += `<i style="background:${markerColor(grades[i] + 1)}"></i> ${grades[i]}${grades[i + 1] ? `&ndash;${grades[i + 1]}` : '+'}<br>`;
         }
         return div;
     };
-
     legend.addTo(myMap);
 }
 
