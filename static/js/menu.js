@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // MENU EVENT HANDLERS
     //const printChartBtn = document.getElementById("printChart");
-    /*
+
     printChartBtn.addEventListener("click", () => {
         hamburgerMenu.classList.add("hidden"); // Hide the menu
         window.print(); // Trigger print dialog
-    });*/
+    });
 
     downloadCSVBtn.addEventListener("click", () => showExportOptions("csv"));
     downloadXLSBtn.addEventListener("click", () => showExportOptions("xls"));

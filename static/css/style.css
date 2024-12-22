@@ -48,21 +48,15 @@ html {
     width: 1870px;
 }
 
-#timeline-controls input[type="range"] {
-    width: 100%;
-}
+    #timeline-controls input[type="range"] {
+        width: 100%;
+    }
 
-#timeline-controls button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    cursor: pointer;  
-}
-
-#speed-container {
-  position: absolute;
-  top: 10px;
-  left: 20px; /* Adjust horizontal position */
-}
+    #timeline-controls button {
+        margin-top: 10px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
 
 #speed-container {
     position: absolute;
@@ -125,7 +119,6 @@ html {
             background-color: #f0f0f0;
         }
 
-<<<<<<< HEAD
 /* --- TOGGLE MODE --- */
 .toggle-mode {
     position: absolute;
@@ -150,8 +143,4 @@ html {
     .toggle-mode input {
         margin-right: 10px; /* Add spacing between radio button and text */
     }
-=======
-
-/* --- INFO BOX --- */
->>>>>>> 54adb339fa00597fa2ef4c1b4ede69d7c83703bc
 
