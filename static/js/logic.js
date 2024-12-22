@@ -63,7 +63,7 @@ function initializeTimeline(firstDate, lastDate, features) {
         let currentDate = new Date(firstDate);
         currentDate.setDate(firstDate.getUTCDate() + (index - 1)); // Use UTC-based date
         const currentDayUTC = currentDate.toISOString().split("T")[0]; // Current day in UTC
-        console.log("Current Day (UTC):", currentDayUTC);
+        //console.log("Current Day (UTC):", currentDayUTC);
 
         // Adjust currentDate to the latest valid earthquake date in GMT+0 (UTC)
         let index1 = 0;
@@ -82,7 +82,7 @@ function initializeTimeline(firstDate, lastDate, features) {
         }
 
         dateDisplay.textContent = `Date: ${currentDate.toISOString().split("T")[0]}`;
-        console.log("Final Current Date (GMT+0):", currentDate);
+        //console.log("Final Current Date (GMT+0):", currentDate);
 
         // Filter features based on the selected mode
         let filteredFeatures;
@@ -105,8 +105,8 @@ function initializeTimeline(firstDate, lastDate, features) {
         }
 
         // Debugging Logs
-        console.log("Filtered Features Count:", filteredFeatures.length);
-        console.log("Filtered Features:", filteredFeatures);
+        //console.log("Filtered Features Count:", filteredFeatures.length);
+        //console.log("Filtered Features:", filteredFeatures);
 
         // Update the earthquake layer with the filtered features
         updateEarthquakeLayer(filteredFeatures);
@@ -115,6 +115,12 @@ function initializeTimeline(firstDate, lastDate, features) {
     function playTimeline(forward = true) {
         clearInterval(intervalId);
         let currentIndex = parseInt(timelineInput.value, 10);
+    
+        // Get the speed value from the selector
+        const speedSelector = document.getElementById('speed-selector');
+        const speed = parseInt(speedSelector.value, 10);
+        console.log("Selected speed:", speed);
+
 
         // Get the speed value from the selector
         const speedSelector = document.getElementById('speed-selector');
@@ -132,6 +138,7 @@ function initializeTimeline(firstDate, lastDate, features) {
             }
         }, speed); // Use the selected speed
     }
+    
 
     playBackButton.addEventListener("click", () => playTimeline(false));
     playForwardButton.addEventListener("click", () => playTimeline(true));
@@ -270,9 +277,15 @@ function createMap(earthquakes, plates) {
         let div = L.DomUtil.create('div', 'info legend');
         div.style.marginBottom = '120px'; // Raise the legend 50px from the bottom
         div.style.marginRight = '10px';  // Adjust left margin if needed
+<<<<<<< HEAD
 
         let grades = [-10, 10, 30, 50, 70, 90];
 
+=======
+    
+        let grades = [-10, 10, 30, 50, 70, 90];
+    
+>>>>>>> 54adb339fa00597fa2ef4c1b4ede69d7c83703bc
         // Loop through depth intervals and generate a label with a colored square
         for (let i = 0; i < grades.length; i++) {
             div.innerHTML += `<i style="background:${markerColor(grades[i] + 1)}"></i> ${grades[i]}${grades[i + 1] ? `&ndash;${grades[i + 1]}` : '+'}<br>`;
