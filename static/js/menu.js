@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const dateFrom = dateFromInput.value;
         const dateTo = dateToInput.value;
 
-        fetch("/static/data/Chunk.json")
+        fetch("/static/data/first_rows.json")
             .then(response => response.json())
             .then(data => {
                 const filteredData = allData ? data.features : filterDataByDate(data.features, dateFrom, dateTo);
